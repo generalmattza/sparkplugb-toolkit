@@ -1,0 +1,101 @@
+{
+    "timestamp": 1626170000000,
+    "metrics": [
+      {
+        "name": "machine_state",
+        "dataType": 11,
+        "timestamp": 1626170001000,
+        "value": true,
+        "properties": {
+          "keys": ["description", "priority"],
+          "values": [
+            {
+              "type": 12,
+              "value": "Indicates if machine is running"
+            },
+            {
+              "type": 3,
+              "value": 1
+            }
+          ]
+        }
+      },
+      {
+        "name": "counter",
+        "dataType": 4,
+        "timestamp": 1626170002000,
+        "value": 12345
+      },
+      {
+        "name": "temp_sensor",
+        "dataType": 9,
+        "timestamp": 1626170003000,
+        "value": 23.5,
+        "properties": {
+          "keys": ["units"],
+          "values": [
+            {
+              "type": 12,
+              "value": "Celsius"
+            }
+          ]
+        }
+      },
+      {
+        "name": "metadata_payload",
+        "dataType": 16,
+        "value": {
+          "num_of_columns": 3,
+          "columns": ["id", "desc", "timestamp_ms"],
+          "types": [3, 12, 4],
+          "rows": [
+            {
+              "elements": [1, "Row1 description", 1626170004000]
+            },
+            {
+              "elements": [2, "Row2 description", 1626170005000]
+            }
+          ]
+        },
+        "properties": {
+          "keys": ["source"],
+          "values": [
+            {
+              "type": 12,
+              "value": "internal"
+            }
+          ]
+        }
+      },
+      {
+        "name": "machine_config",
+        "dataType": 21,
+        "value": [
+          {
+            "keys": ["cfg1", "cfg2"],
+            "values": [
+              {
+                "type": 12,
+                "value": "val1"
+              },
+              {
+                "type": 3,
+                "value": 50
+              }
+            ]
+          },
+          {
+            "keys": ["cfg3"],
+            "values": [
+              {
+                "type": 12,
+                "value": "val2"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "body": "example payload body"
+  }
+  
