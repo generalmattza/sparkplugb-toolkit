@@ -1,8 +1,9 @@
 # Refer to https://sparkplug.eclipse.org/specification/version/3.0/documents/sparkplug-specification-3.0.0.pdf
 
 
+# Dataset Payload Type
 dataset_payload = {
-    "timestamp": 1626170000000,
+    "timestamp": 1737090405,
     "metrics": [
         {
             "name": "AXUV_example",
@@ -25,9 +26,9 @@ dataset_payload = {
                                     {"type": 3, "value": 1000},
                                 ],  # Array[PropertyValue]
                             },  # PropertySet
-                            {"type": 3, "value": 5},  # PropertyValue
                         ],  # Array[PropertyValue]
                     },  # PropertySet
+                    {"type": 3, "value": 5},  # PropertyValue
                 ],
             },
             "value": {
@@ -42,5 +43,41 @@ dataset_payload = {
             },
         },
     ],
-    "body": b"45321753782615381",  # [Optional]
+    "body": b"UNSTRUCTURED_BINARY_DATA",  # [Optional]
+}
+
+
+# Time Series Payload Type
+timeseries_payload = {
+    "timestamp": 1626170000000,
+    "metrics": [
+        {
+            "name": "temperature",
+            "dataType": 9,  # 9 = Float
+            "timestamp": 1626170001000,
+            "value": 23.7,
+            "properties": {
+                "keys": ["units", "location"],
+                "values": [
+                    {"type": 12, "value": "C"},  # type=12 => String
+                    {"type": 12, "value": "Lab1"},
+                ],
+            },
+        },
+        {
+            "name": "pressure",
+            "dataType": 10,  # 10 = Double
+            "timestamp": 1626170001500,
+            "value": 101.325,
+            "properties": {"keys": ["units"], "values": [{"type": 12, "value": "kPa"}]},
+        },
+        {
+            "name": "humidity",
+            "dataType": 9,  # 9 = Float
+            "timestamp": 1626170002000,
+            "value": 45.2,
+            # no properties here
+        },
+    ],
+    "body": "optional body here",
 }
