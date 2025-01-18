@@ -17,7 +17,7 @@ sys.path.insert(0, "../core/")
 # print(sys.path)
 
 import paho.mqtt.client as mqtt
-from sparkplug_b.sparkplug_b_pb2 import Payload
+from sparkplug_b import Payload
 
 
 # Application Variables

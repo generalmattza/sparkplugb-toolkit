@@ -4,7 +4,7 @@ import json
 
 
 from example_payloads import dataset_payload, timeseries_payload
-from sparkplugb_validator.validator import SparkplugBPayload
+from sparkplug_b.validator import SparkplugBPayload
 
 
 with open("mixed_payload.json", "r") as f:
