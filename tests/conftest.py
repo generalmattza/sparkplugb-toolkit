@@ -18,3 +18,18 @@ def payload():
 def message(payload):
     message = sp.parse_protobuf_to_message(payload)
     return message
+
+
+@pytest.fixture
+def payload_dataset():
+    # Define a dataset type payload
+    payload = sp.Payload()
+    types = [
+        sp.DataSetDataType.Int8,
+        sp.DataSetDataType.Int16,
+        sp.DataSetDataType.Int32,
+    ]
+    columns = ["Int8s", "Int16s", "Int32s"]
+    dataset = sp.init_dataset_metric(payload, "Dataset Metric", types, columns)
+    sp.add_rows_to_dataset(dataset, [[0, 1, 2], [3, 4, 5]])
+    return payload
