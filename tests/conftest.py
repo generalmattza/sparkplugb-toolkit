@@ -1,5 +1,5 @@
 import pytest
-import sparkplug_b as sp
+import sparkplugb_parser as sp
 
 
 @pytest.fixture

@@ -1,8 +1,8 @@
-from sparkplug_b.python.sparkplug_b_pb2 import (
+from sparkplugb_parser.sparkplug_b_pb2 import (
     Payload,
 )
-import sparkplug_b.python.sparkplug_b_pb2 as sparkplug_b_pb2
-from sparkplug_b.python.sparkplug_b import (
+import sparkplugb_parser.sparkplug_b_pb2 as sparkplug_b_pb2
+from sparkplugb_parser.sparkplug_b import (
     parse_message_to_protobuf,
     parse_dict_to_protobuf,
     parse_message_to_dict,
@@ -12,7 +12,7 @@ from sparkplug_b.python.sparkplug_b import (
     add_rows_to_dataset,
 )
 
-from sparkplug_b.python.sparkplug_b import (
+from sparkplugb_parser.sparkplug_b import (
     AliasMap,
     DataSetDataType,
     MetricDataType,

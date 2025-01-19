@@ -1,4 +1,4 @@
-import sparkplug_b as sp
+import sparkplugb_parser as sp
 
 
 def test_parse_message_to_protobuf(payload):

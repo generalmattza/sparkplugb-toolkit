@@ -1,82 +1,136 @@
 # Refer to https://sparkplug.eclipse.org/specification/version/3.0/documents/sparkplug-specification-3.0.0.pdf
 
-
-# Dataset Payload Type
 dataset_payload = {
-    "timestamp": 1737090405,
+    "timestamp": 1737090405,  # Payload-level timestamp
     "metrics": [
         {
             "name": "AXUV_example",
-            "dataType": 16,  # 16 is the data type for DataSet
-            # "metadata": {
-            #     # See section 6.4.7
-            # },
+            "timestamp": 1737090405,  # Optional metric-level timestamp
+            "datatype": 16,  # 16 -> DataSet
             "properties": {
-                "keys": ["gain", "range"],  # Array[strings]
+                "keys": ["gain", "range"],  # repeated string
                 "values": [
                     {
-                        "type": 21,  # PropertySetList
-                        "value": [
-                            {
-                                "keys": ["ch1", "ch2", "ch3", "ch4"],  # Array[string]
-                                "values": [
-                                    {"type": 3, "value": 1000},
-                                    {"type": 3, "value": 1000},
-                                    {"type": 3, "value": 1000},
-                                    {"type": 3, "value": 1000},
-                                ],  # Array[PropertyValue]
-                            },  # PropertySet
-                        ],  # Array[PropertyValue]
-                    },  # PropertySet
-                    {"type": 3, "value": 5},  # PropertyValue
+                        "type": 21,  # 21 -> PropertySetList
+                        "propertysets_value": {
+                            "propertyset": [
+                                {
+                                    "keys": ["ch1", "ch2", "ch3", "ch4"],
+                                    "values": [
+                                        {"type": 3, "int_value": 1000},  # e.g., int32
+                                        {"type": 3, "int_value": 1000},
+                                        {"type": 3, "int_value": 1000},
+                                        {"type": 3, "int_value": 1000},
+                                    ],
+                                }
+                            ]
+                        },
+                    },
+                    {
+                        "type": 3,  # 3 -> int32
+                        "int_value": 5,
+                    },
                 ],
             },
-            "value": {
+            "dataset_value": {
                 "num_of_columns": 5,
                 "columns": ["idx", "ch1", "ch2", "ch3", "ch4"],
-                "types": [3, 2, 2, 2, 2],  # uint32, int16, int16, int16, int16
+                "types": [3, 2, 2, 2, 2],
                 "rows": [
-                    {"elements": [0, 1, 2, 3, 4]},
-                    {"elements": [1, 2, 3, 4, 5]},
-                    {"elements": [2, 3, 4, 5, 6]},
+                    {
+                        "elements": [
+                            {"int_value": 0},
+                            {"int_value": 1},
+                            {"int_value": 2},
+                            {"int_value": 3},
+                            {"int_value": 4},
+                        ]
+                    },
+                    {
+                        "elements": [
+                            {"int_value": 1},
+                            {"int_value": 2},
+                            {"int_value": 3},
+                            {"int_value": 4},
+                            {"int_value": 5},
+                        ]
+                    },
+                    {
+                        "elements": [
+                            {"int_value": 2},
+                            {"int_value": 3},
+                            {"int_value": 4},
+                            {"int_value": 5},
+                            {"int_value": 6},
+                        ]
+                    },
                 ],
             },
-        },
+        }
     ],
-    "body": b"UNSTRUCTURED_BINARY_DATA",  # [Optional]
+    # The “body” field is a bytes field in Protobuf;
+    # here, it is shown as a string for demonstration.
+    "body": "UNSTRUCTURED_BINARY_DATA - Used for data that does not fit the structured data model",
 }
 
-
-# Time Series Payload Type
+# Expanded Time Series Payload Example
 timeseries_payload = {
-    "timestamp": 1626170000000,
+    "timestamp": 1626170000000,  # Payload-level timestamp (ms since epoch)
     "metrics": [
         {
             "name": "temperature",
-            "dataType": 9,  # 9 = Float
+            "datatype": 9,  # 9 = Float
             "timestamp": 1626170001000,
-            "value": 23.7,
+            "float_value": 23.7,
             "properties": {
                 "keys": ["units", "location"],
                 "values": [
-                    {"type": 12, "value": "C"},  # type=12 => String
-                    {"type": 12, "value": "Lab1"},
+                    {"type": 12, "string_value": "C"},  # 12 => String
+                    {"type": 12, "string_value": "Lab1"},
                 ],
             },
         },
         {
             "name": "pressure",
-            "dataType": 10,  # 10 = Double
+            "datatype": 10,  # 10 = Double
             "timestamp": 1626170001500,
-            "value": 101.325,
-            "properties": {"keys": ["units"], "values": [{"type": 12, "value": "kPa"}]},
+            "float_value": 101.325,
+            "properties": {
+                "keys": ["units"],
+                "values": [{"type": 12, "string_value": "kPa"}],
+            },
         },
         {
             "name": "humidity",
-            "dataType": 9,  # 9 = Float
+            "datatype": 9,  # 9 = Float
             "timestamp": 1626170002000,
-            "value": 45.2,
+            "float_value": 45.2,
             # no properties here
+        },
+        {
+            "name": "vibration",
+            "datatype": 10,  # 10 = Double
+            "timestamp": 1626170002500,
+            "float_value": 0.002,
+            "properties": {
+                "keys": ["sensor_id", "axis"],
+                "values": [
+                    {"type": 12, "string_value": "VibSensor45"},
+                    {"type": 12, "string_value": "Z"},
+                ],
+            },
+        },
+        {
+            "name": "alarm",
+            "datatype": 11,  # 11 = Boolean
+            "timestamp": 1626170003000,
+            "boolean_value": True,
+            "properties": {
+                "keys": ["description"],
+                "values": [
+                    {"type": 12, "string_value": "High Temperature Alarm"},
+                ],
+            },
         },
     ],
     "body": "optional body here",

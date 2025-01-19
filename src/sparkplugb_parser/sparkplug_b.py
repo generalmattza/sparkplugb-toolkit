@@ -1,9 +1,8 @@
 import logging
 import pandas as pd
 import time
-from itertools import zip_longest  # Potentially useful if column lengths differ
 
-import sparkplug_b.python.sparkplug_b_pb2 as sparkplug_b_pb2
+import sparkplugb_parser.sparkplug_b_pb2 as sparkplug_b_pb2
 from google.protobuf.json_format import ParseDict, MessageToDict
 from google.protobuf.message import DecodeError
 
@@ -143,6 +142,29 @@ metric_python_type_map = {
     MetricDataType.Template: None,  # or handle specially
 }
 
+property_value_field_map = {
+    # Basic integer types
+    1: "int_value",  # e.g. Int8
+    2: "int_value",  # e.g. Int16
+    3: "int_value",  # e.g. Int32
+    4: "long_value",  # e.g. Int64
+    # Floats, Doubles
+    9: "float_value",
+    10: "double_value",
+    # Boolean
+    11: "boolean_value",
+    # String, Text
+    12: "string_value",
+    14: "string_value",
+    # PropertySet, PropertySetList
+    20: "propertyset_value",
+    21: "propertysets_value",
+    # Bytes, File, Template, etc. can also be included here if needed:
+    # 17: "bytes_value",
+    # 18: "bytes_value",  # or something else
+    # 19: "template_value",
+}
+
 
 def parse_message_to_protobuf(message: bytearray) -> sparkplug_b_pb2.Payload:
     """
@@ -231,7 +253,7 @@ def parse_protobuf_to_message(protobuf: sparkplug_b_pb2.Payload) -> bytes:
 
 def parse_payload_to_dfs(
     payload: sparkplug_b_pb2.Payload,
-) -> pd.DataFrame | list[pd.DataFrame]:
+) -> tuple[pd.DataFrame, dict] | tuple[list[pd.DataFrame], list[dict]]:
     """
     Extract one or more DataSets from a SparkplugB Payload and convert them to pandas DataFrames.
 
@@ -249,15 +271,19 @@ def parse_payload_to_dfs(
     assert isinstance(payload, sparkplug_b_pb2.Payload)
 
     # Gather all DataSet metrics
-    datasets = [
-        m.dataset_value for m in payload.metrics if m.datatype == MetricDataType.DataSet
-    ]
+    datasets, properties, metric_indexes = [], [], []
+    for idx, metric in enumerate(payload.metrics):
+        if metric.datatype == MetricDataType.DataSet:
+            datasets.append(metric.dataset_value)
+            metric_indexes.append(idx)
+            properties.append(parse_metric_properties(metric))
+
     if not datasets:
         logger.warning("No DataSet metrics found in the Payload.")
-        return []
+        return None, None
 
     dfs = []
-    for dataset in datasets:
+    for idx, dataset in zip(metric_indexes, datasets):
         # Check columns and types
         if len(dataset.columns) != len(dataset.types):
             msg = "Columns and types mismatch in DataSet."
@@ -283,15 +309,14 @@ def parse_payload_to_dfs(
         # Create the DataFrame
         columns = [str(col) for col in dataset.columns]
         df = pd.DataFrame(data, columns=columns)
-
+        metric = payload.metrics[idx]
         logger.info(
             f"Extracted DataFrame from payload with shape {df.shape}",
             extra={
                 "shape": df.shape,
-                # The next attributes are not standard in DataSet, but if you had them:
-                # "name": getattr(dataset, "name", None),
-                # "alias": getattr(dataset, "alias", None),
-                # "timestamp": getattr(dataset, "timestamp", None),
+                "metric_name": getattr(metric, "name", None),
+                "alias": getattr(metric, "alias", None),
+                "metric_ts": getattr(metric, "timestamp", None),
             },
         )
         dfs.append(df)
@@ -299,8 +324,8 @@ def parse_payload_to_dfs(
     # Return a single DataFrame if there's only one
     logger.debug(f"Returning {len(dfs)} DataFrame(s) from the payload.")
     if len(dfs) == 1:
-        return dfs[0]
-    return dfs
+        return dfs[0], properties[0]
+    return dfs, properties
 
 
 def init_dataset_metric(
@@ -364,7 +389,7 @@ def add_rows_to_dataset(
     logger.debug("Adding rows to DataSet.")
     for row_index, row in enumerate(rows):
         row_pb = dataset.rows.add()  # Add a new Row message
-        for col_index, (value, type_code) in enumerate(zip(row, dataset.types)):
+        for value, type_code in zip(row, dataset.types):
             element_pb = row_pb.elements.add()
 
             # Map type code to the correct oneof field name
@@ -380,3 +405,77 @@ def add_rows_to_dataset(
 
     logger.debug(f"Total rows in dataset after addition: {len(dataset.rows)}.")
     return dataset
+
+
+# Metric Property Parsing
+# ------------------------
+
+
+def parse_metric_properties(metric):
+    """
+    Extract a Python dictionary of key-value pairs from a metric's 'properties' field.
+
+    Returns an empty dict if the metric has no properties.
+    """
+    if not metric.HasField("properties"):
+        return {}
+    return parse_propertyset(metric.properties)
+
+
+def parse_propertyset(property_set):
+    """
+    Recursively parse a PropertySet into a Python dict {key: value}.
+    - property_set.keys -> repeated string
+    - property_set.values -> repeated PropertyValue
+    """
+    result = {}
+    for key, prop_val in zip(property_set.keys, property_set.values):
+        result[key] = parse_propertyvalue(prop_val)
+    return result
+
+
+def parse_propertyvalue(prop_value):
+    """
+    Return the Python object corresponding to a given PropertyValue.
+
+    This uses property_value_field_map to find the correct oneof field,
+    then calls the appropriate sub-parser for PropertySet/PropertySetList,
+    or simply returns the raw primitive (int, float, bool, string, etc.).
+    """
+    # If property is explicitly marked null
+    if prop_value.is_null:
+        return None
+
+    # Determine which field name to read, based on prop_value.type
+    field_name = property_value_field_map.get(prop_value.type, None)
+    if not field_name:
+        # If we have an unknown type code or something you haven't mapped
+        return None
+
+    # Now get the raw value from the oneof field
+    raw_value = getattr(prop_value, field_name)
+
+    # If it's a nested PropertySet, parse it recursively
+    if field_name == "propertyset_value":
+        return parse_propertyset(raw_value)
+
+    # If it's a PropertySetList, parse it as a list of dicts
+    if field_name == "propertysets_value":
+        return parse_propertysetlist(raw_value)
+
+    # Otherwise, it's a "simple" type (int, float, bool, string, bytes, etc.)
+    return raw_value
+
+
+def parse_propertysetlist(property_set_list):
+    """
+    Parse a PropertySetList into a Python data structure.
+    - If there's only one PropertySet in the list, return it as a single dict.
+    - If there are multiple PropertySets, return a list of dicts.
+    """
+    # Build a list of parsed property sets
+    parsed_list = [parse_propertyset(ps) for ps in property_set_list.propertyset]
+    if len(parsed_list) == 1:
+        # Flatten if there's exactly one
+        return parsed_list[0]
+    return parsed_list
