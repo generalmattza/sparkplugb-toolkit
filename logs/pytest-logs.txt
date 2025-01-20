@@ -1,5 +1,0 @@
-22:52:07 sparkplugb_parser.sparkplug_b INFO Extracted DataFrame from payload with shape (2, 3)
-22:52:07 sparkplugb_parser.sparkplug_b WARNING No DataSet metrics found in the Payload.
-22:52:07 sparkplugb_parser.sparkplug_b INFO Extracted DataFrame from payload with shape (3, 5)
-22:52:07 sparkplugb_parser.sparkplug_b WARNING No DataSet metrics found in the Payload.
-22:52:07 sparkplugb_parser.sparkplug_b WARNING No DataSet metrics found in the Payload.

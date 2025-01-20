@@ -1,35 +1,21 @@
 import pytest
-import sparkplugb_parser as sp
+
+from paho.mqtt.client import Client, CallbackAPIVersion
+
+# Use the public MQTT broker at test.mosquitto.org
+BROKER_HOSTNAME = "test.mosquitto.org"
+BROKER_PORT = 1883
+BROKER_USERNAME = "rw"
+BROKER_PASSWORD = "readwrite"
 
 
-@pytest.fixture
-def payload():
-    payload = sp.Payload()
-    payload.metrics.add().name = "Node Metric0"
-    payload.metrics[0].datatype = 0
-    payload.metrics[0].string_value = "hello node"
-    payload.metrics.add().name = "Node Metric1"
-    payload.metrics[1].datatype = 1
-    payload.metrics[1].boolean_value = True
-    return payload
-
-
-@pytest.fixture
-def message(payload):
-    message = sp.parse_protobuf_to_message(payload)
-    return message
-
-
-@pytest.fixture
-def payload_dataset():
-    # Define a dataset type payload
-    payload = sp.Payload()
-    types = [
-        sp.DataSetDataType.Int8,
-        sp.DataSetDataType.Int16,
-        sp.DataSetDataType.Int32,
-    ]
-    columns = ["Int8s", "Int16s", "Int32s"]
-    dataset = sp.init_dataset_metric(payload, "Dataset Metric", types, columns)
-    sp.add_rows_to_dataset(dataset, [[0, 1, 2], [3, 4, 5]])
-    return payload
+@pytest.fixture(scope="session")
+def mqtt_client():
+    client = Client(callback_api_version=CallbackAPIVersion.VERSION2)
+    client.connect(BROKER_HOSTNAME, BROKER_PORT)
+    client.username_pw_set(BROKER_USERNAME, BROKER_PASSWORD)
+    client.loop_start()
+    client.last_payload = None
+    yield client
+    client.loop_stop()
+    client.disconnect()
