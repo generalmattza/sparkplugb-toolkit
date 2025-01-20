@@ -1,4 +1,4 @@
-from sparkplug_b_toolkit import SparkplugBParser
+from sparkplugb_toolkit import SparkplugBParser
 
 
 EXAMPLE_TIMESERIES_PAYLOAD = {
