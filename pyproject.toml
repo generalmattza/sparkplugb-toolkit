@@ -1,10 +1,23 @@
 [project]
-name = "sparkplugb-payload"
-version = "0.1.0"
-description = "Add your description here"
+name = "sparkplug-b-tookit"
+version = "0.0.1"
+description = "A Python library that provides a high-level toolkit for reading, writing, and manipulating SparkplugB payloads using Protobuf"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = [
-    "pandas>=2.2.3",
-    "pydantic>=2.10.5",
-]
+dependencies = ["mypy-protobuf>=3.6.0", "pandas>=2.2.3", "pydantic>=2.10.5"]
+
+[tool.uv]
+package = true
+
+[dependency-groups]
+dev = ["paho-mqtt>=2.1.0", "pytest>=8.3.4"]
+
+[tool.pytest.ini_options]
+#addopts = "--maxfail=1 -s"
+#console_output_style = "progress"
+log_cli = false
+log_level = "INFO"
+log_cli_format = "%(asctime)s %(levelname)s %(message)s"
+log_file = "logs/pytest-logs.txt"
+log_file_level = "INFO"
+log_file_format = "%(asctime)s %(name)s %(levelname)s %(message)s"
