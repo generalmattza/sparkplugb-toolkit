@@ -178,12 +178,30 @@ class ProtobufParser(Generic[T]):
             )
             return None
 
-    def parse_protobuf_to_dict(self, protobuf: Message) -> dict | None:
+    def parse_protobuf_to_dict(
+        self,
+        protobuf: Message,
+        always_print_fields_with_no_presence: bool = False,
+        preserving_proto_field_name: bool = True,
+        use_integers_for_enums: bool = False,
+        descriptor_pool: Optional[DescriptorPool] = None,
+        float_precision: Optional[float] = None,
+    ) -> dict | None:
         """
         Convert a Protobuf message instance to a Python dictionary.
 
         Args:
             protobuf (Message): A Protobuf message instance to convert.
+            always_print_fields_with_no_presence (bool): If True, include fields
+                in the output even if they have no presence. Defaults to False.
+            preserving_proto_field_name (bool): If True, keep the original field
+                names defined in the .proto file. Defaults to True.
+            use_integers_for_enums (bool): If True, enum fields are returned as
+                integers instead of strings. Defaults to False.
+            descriptor_pool (DescriptorPool, optional): A descriptor pool used
+                for resolving field information. Defaults to None.
+            float_precision (Optional[float]): If set, the output for floating point
+                fields is rounded to this precision. Defaults to None.
 
         Returns:
             dict: A dictionary representation of the Protobuf message, or None
@@ -191,7 +209,14 @@ class ProtobufParser(Generic[T]):
         """
         logger.debug("Converting Protobuf message to dict.")
         try:
-            return MessageToDict(protobuf)
+            return MessageToDict(
+                message=protobuf,
+                always_print_fields_with_no_presence=always_print_fields_with_no_presence,
+                preserving_proto_field_name=preserving_proto_field_name,
+                use_integers_for_enums=use_integers_for_enums,
+                descriptor_pool=descriptor_pool,
+                float_precision=float_precision,
+            )
         except Exception as e:
             logger.error(
                 f"Error converting Protobuf message to dict: {e}", exc_info=True
