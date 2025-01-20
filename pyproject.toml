@@ -1,5 +1,5 @@
 [project]
-name = "sparkplug-b-tookit"
+name = "sparkplugb-tookit"
 version = "0.0.1"
 description = "A Python library that provides a high-level toolkit for reading, writing, and manipulating SparkplugB payloads using Protobuf"
 readme = "README.md"

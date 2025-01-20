@@ -4,7 +4,7 @@ from typing import Optional, Tuple, List, Union
 
 import pandas as pd
 
-import sparkplug_b_toolkit.sparkplug_b_pb2 as sparkplug_b_pb2
+import sparkplugb_toolkit.sparkplug_b_pb2 as sparkplug_b_pb2
 from protobuf_facade import ProtobufParser
 
 logger = logging.getLogger(__name__)
