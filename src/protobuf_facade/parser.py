@@ -177,3 +177,23 @@ class ProtobufParser(Generic[T]):
                 f"Error converting Protobuf message to dict: {e}", exc_info=True
             )
             return None
+
+    def parse_protobuf_to_dict(self, protobuf: Message) -> dict | None:
+        """
+        Convert a Protobuf message instance to a Python dictionary.
+
+        Args:
+            protobuf (Message): A Protobuf message instance to convert.
+
+        Returns:
+            dict: A dictionary representation of the Protobuf message, or None
+                  if an error occurs.
+        """
+        logger.debug("Converting Protobuf message to dict.")
+        try:
+            return MessageToDict(protobuf)
+        except Exception as e:
+            logger.error(
+                f"Error converting Protobuf message to dict: {e}", exc_info=True
+            )
+            return None
