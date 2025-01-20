@@ -107,7 +107,7 @@ Below is a brief overview. For detailed information, see the docstrings in `spar
 ### Parsing SparkplugB Payloads
 
 ```python
-from sparkplugb_toolkit.sparkplug_b import SparkplugBParser
+from sparkplugb_toolkit.sparkplugb_parser import SparkplugBParser
 
 parser = SparkplugBParser()
 
