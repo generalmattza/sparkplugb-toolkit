@@ -344,6 +344,13 @@ class SparkplugBParser(ProtobufParser[sparkplug_b_pb2.Payload]):
 
         logger.debug(f"DataSet now has {len(dataset.rows)} total row(s).")
         return dataset
+    
+    def parse_metric_properties_to_dict(self, metric: sparkplug_b_pb2.Payload.Metric) -> dict:
+        """
+        Extract a Python dictionary of key-value pairs from a metric's 'properties' field.
+        Returns an empty dict if the metric has no properties.
+        """
+        return self._parse_metric_properties(metric)
 
     # ----------------------------------------------------------------------
     # SparkplugB-specific Property Parsing
