@@ -1,6 +1,6 @@
 import pytest
-import sparkplugb_toolkit as spt
-from sparkplugb_toolkit.example_payloads import example_payloads
+import sparkplug_b_parser as spt
+from sparkplug_b_parser.example_payloads import example_payloads
 
 
 @pytest.fixture(scope="module")

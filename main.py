@@ -1,4 +1,3 @@
-from sparkplugb_toolkit import SparkplugBParser
 
 
 EXAMPLE_TIMESERIES_PAYLOAD = {
@@ -111,6 +110,9 @@ EXAMPLE_DATASET_PAYLOAD = {
 }
 
 if __name__ == "__main__":
+    
+    from sparkplug_b_parser import SparkplugBParser
+
     parser = SparkplugBParser()
 
     # Parse SparkplugB payload containing timeseries data

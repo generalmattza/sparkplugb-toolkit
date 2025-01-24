@@ -1,5 +1,5 @@
 import pytest
-import sparkplugb_toolkit as spt
+import sparkplug_b_parser as spt
 
 
 def test_parse_payload_to_dfs(example_message_dataset, parser):

@@ -1,7 +1,7 @@
 import pytest
 from google.protobuf.struct_pb2 import Struct
 
-from protobuf_facade import ProtobufParser
+from proto_parser import ProtobufParser
 
 
 # 1. Define a subclass of ProtobufParser that uses Struct as the message type.

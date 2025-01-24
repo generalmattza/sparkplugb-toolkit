@@ -188,7 +188,7 @@ class ProtobufParser(Generic[T]):
         float_precision: Optional[float] = None,
     ) -> dict | None:
         """
-        Convert a Protobuf message instance to a Python dictionary.
+        Convert a Protobuf message dinstance to a Python dictionary.
 
         Args:
             protobuf (Message): A Protobuf message instance to convert.
