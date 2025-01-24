@@ -1,0 +1,9 @@
+[submodule "mcontroller/nanopb"]
+	path = mcontroller/nanopb
+	url = https://github.com/nanopb/nanopb.git
+[submodule "tahu"]
+	path = tahu
+	url = https://github.com/eclipse-tahu/tahu.git
+[submodule "nanopb"]
+	path = nanopb
+	url = https://github.com/nanopb/nanopb.git
