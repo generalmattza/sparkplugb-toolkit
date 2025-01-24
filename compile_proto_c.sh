@@ -14,7 +14,7 @@ fi
 # 2) Set up your variables
 PYTHON_PATH="../../../.venv/bin/python"   # Path to your Python executable
 CORE_DIR="./tahu/c/core"
-OUTPUT_PATH="../../../protobuf-micro"
+OUTPUT_PATH="../../../protobuf-c"
 PROTO_PATH="../../sparkplug_b/sparkplug_b.proto"
 DESCRIPTOR_FILE="tahu.pb"          # The name for the descriptor set output
 OPTIONS_PATH="tahu.options"        # Nanopb options file
