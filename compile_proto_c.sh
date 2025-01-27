@@ -14,10 +14,16 @@ fi
 # 2) Set up your variables
 PYTHON_PATH="../../../.venv/bin/python"   # Path to your Python executable
 CORE_DIR="./tahu/c/core"
+<<<<<<< HEAD
 PROTO_PATH="../../"
 PROTO_TARGET="../../sparkplug_b/sparkplug_b.proto"
 DESCRIPTOR_SET="tahu.pb"          # The name for the descriptor set output
 OUTPUT_PATH="../src-micro-protobuf"                   # Where the .pb.c/.pb.h files will be generated
+=======
+OUTPUT_PATH="../../../protobuf-c"
+PROTO_PATH="../../sparkplug_b/sparkplug_b.proto"
+DESCRIPTOR_FILE="tahu.pb"          # The name for the descriptor set output
+>>>>>>> 96fb48b35787d1a7227174d0f12f64a6248e87fe
 OPTIONS_PATH="tahu.options"        # Nanopb options file
 NANOPB_DIR="../../../nanopb"        # Path to Nanopb
 NANOPB_GENERATOR_PATH="$NANOPB_DIR/generator/nanopb_generator.py"

@@ -4,8 +4,8 @@ from typing import Optional, Tuple, List, Union
 
 import pandas as pd
 
-import sparkplugb_toolkit.sparkplug_b_pb2 as sparkplug_b_pb2
-from protobuf_facade import ProtobufParser
+from . import sparkplug_b_pb2
+from proto_parser import ProtobufParser
 
 logger = logging.getLogger(__name__)
 
