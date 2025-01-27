@@ -4,7 +4,13 @@ version = "0.0.1"
 description = "A Python library that provides a high-level toolkit for reading, writing, and manipulating Sparkplug B payloads using Protobuf"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["mypy-protobuf>=3.6.0", "pandas>=2.2.3", "pydantic>=2.10.5"]
+dependencies = [
+    "grpcio-tools>=1.70.0",
+    "mypy-protobuf>=3.6.0",
+    "pandas>=2.2.3",
+    "protobuf>=5.29.3",
+    "pydantic>=2.10.5",
+]
 
 [tool.uv]
 package = true

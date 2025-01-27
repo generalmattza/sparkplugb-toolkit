@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import TypeVar, ClassVar, Generic, Optional
 from google.protobuf.json_format import ParseDict, MessageToDict
@@ -222,3 +223,22 @@ class ProtobufParser(Generic[T]):
                 f"Error converting Protobuf message to dict: {e}", exc_info=True
             )
             return None
+        
+    def parse_json_to_protobuf(self, data: str) -> T:
+        """
+        Convert a JSON string to an instance of the subclass's `message_type`.
+
+        Args:
+            data (str): A JSON string representing fields for the Protobuf message.
+
+        Returns:
+            T: A Protobuf message instance of type `message_type`.
+        """
+        logger.debug("Converting JSON to Protobuf message.")
+        payload = self.message_type()
+        try:
+            ParseDict(js_dict=json.loads(data), message=payload)
+            logger.debug("JSON successfully converted to Protobuf message.")
+        except Exception as e:
+            logger.error(f"Error parsing JSON into Protobuf: {e}", exc_info=True)
+        return payload
