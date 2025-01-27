@@ -1,6 +1,6 @@
 [project]
 name = "sparkplug-b-toolkit"
-version = "0.0.2"
+version = "0.0.3"
 description = "A Python library that provides a high-level toolkit for reading, writing, and manipulating Sparkplug B payloads using Protobuf"
 readme = "README.md"
 requires-python = ">=3.12"
